@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>WS Rooms Minimal</title>
+<style>
+body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
+.row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+#log { white-space: pre-wrap; background:#111; color:#0f0; padding:12px; border-radius:8px; height: 40vh; overflow:auto; }
+input[type=text]{ padding:8px; }
+button { padding:8px 12px; cursor:pointer; }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+</style>
+</head>
+<body>
+<h1>WS Rooms Minimal</h1>
+<div class="row">
+<div>Room:</div>
+<div id="room" class="mono"></div>
+<button id="copy">Скопіювати лінк</button>
+</div>
+
+
+<p>Якщо ви відкрили <code>/</code> — сторінка згенерує випадковий Room ID та перепише URL на <code>/r/&lt;id&gt;</code>.</p>
+
+
+<div class="row">
+<input id="text" type="text" placeholder="повідомлення" size="40" />
+<button id="send">Відправити</button>
+</div>
+
+
+<h3>Лог</h3>
+<div id="log"></div>
+
+
+<script type="module" src="./client.js"></script>
+</body>
+</html>
