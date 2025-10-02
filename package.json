@@ -1,14 +1,17 @@
 {
-    "name": "js-shooter-prototype",
-    "version": "0.1.0",
-    "private": true,
-    "type": "module",
-    "scripts": {
-    "start": "node server/index.js",
-    "dev": "node server/index.js"
-    },
-    "dependencies": {
-    "express": "^4.19.2",
-    "ws": "^8.18.0"
-    }
+  "name": "js-shooter-prototype",
+  "private": true,
+  "version": "0.1.0",
+  "type": "commonjs",
+  "scripts": {
+    "start-dev": "nodemon server/index.js",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "nanoid": "^5.0.0",
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.52.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
 }

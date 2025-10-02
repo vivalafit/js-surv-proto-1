@@ -1,40 +1,32 @@
 <!doctype html>
-<html lang="uk">
-<head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>WS Rooms Minimal</title>
+<title>js-shooter-prototype</title>
 <style>
-body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 24px; }
-.row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
-#log { white-space: pre-wrap; background:#111; color:#0f0; padding:12px; border-radius:8px; height: 40vh; overflow:auto; }
-input[type=text]{ padding:8px; }
-button { padding:8px 12px; cursor:pointer; }
-.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  body { margin: 0; font-family: system-ui, sans-serif; background:#0b0b0b; color:#eaeaea; }
+  .wrap { display: grid; grid-template-columns: 1fr 320px; height: 100vh; }
+  .stage { display:flex; align-items:center; justify-content:center; }
+  .pane { border-left: 1px solid #222; display:flex; flex-direction:column; }
+  .log { flex:1; padding:10px; background:#111; color:#97f59c; overflow:auto; font:12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  form { display:flex; border-top:1px solid #222; }
+  input { flex:1; padding:10px; background:#1a1a1a; color:#eaeaea; border:0; outline:none; }
+  button { padding:10px 14px; background:#2a2a2a; color:#eaeaea; border:0; cursor:pointer; }
+  h1 { font-size:16px; margin:10px; }
+  .tag { color:#aaa; }
+  .log p { margin: 0 0 6px; }
 </style>
-</head>
-<body>
-<h1>WS Rooms Minimal</h1>
-<div class="row">
-<div>Room:</div>
-<div id="room" class="mono"></div>
-<button id="copy">Скопіювати лінк</button>
+<div class="wrap">
+  <div class="stage">
+    <div>
+      <h1>Room: <span id="room" class="tag"></span></h1>
+      <p>Тут потім з’явиться канвас/3D. Зараз тестуємо кімнати й чат.</p>
+    </div>
+  </div>
+  <div class="pane">
+    <div class="log" id="log"></div>
+    <form id="f">
+      <input id="msg" placeholder="type message..." autocomplete="off" />
+      <button>send</button>
+    </form>
+  </div>
 </div>
-
-
-<p>Якщо ви відкрили <code>/</code> — сторінка згенерує випадковий Room ID та перепише URL на <code>/r/&lt;id&gt;</code>.</p>
-
-
-<div class="row">
-<input id="text" type="text" placeholder="повідомлення" size="40" />
-<button id="send">Відправити</button>
-</div>
-
-
-<h3>Лог</h3>
-<div id="log"></div>
-
-
-<script type="module" src="./client.js"></script>
-</body>
-</html>
+<script src="/client.js"></script>
