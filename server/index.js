@@ -4,8 +4,9 @@ const fs = require('fs');
 const path = require('path');
 
 const PORT = 3000;
-const htmlPath = path.join(__dirname, '..', 'client', 'index.html');
-const jsPath   = path.join(__dirname, '..', 'client', 'client.js');
+const clientDir = path.join(__dirname, '..', 'client');
+const htmlPath  = path.join(clientDir, 'index.html');
+const jsPath    = path.join(clientDir, 'client.js');
 
 function withCommonHeaders(res) {
   // на майбутнє: WASM + threads (SAB) для клієнтської фізики
@@ -13,6 +14,7 @@ function withCommonHeaders(res) {
   res.writeHeader('Cross-Origin-Embedder-Policy', 'require-corp');
   return res;
 }
+
 function sendFile(res, filePath, contentType) {
   try {
     const buf = fs.readFileSync(filePath);
@@ -94,6 +96,15 @@ app.get('/', (res, req) => {
 // Сторінка кімнати + клієнтський скрипт
 app.get('/room/:id', (res, req) => sendFile(res, htmlPath, 'text/html; charset=utf-8'))
 app.get('/client.js', (res, req) => sendFile(res, jsPath,   'application/javascript; charset=utf-8'))
+app.get('/main.js', (res, req) => sendFile(res, path.join(clientDir, 'main.js'), 'application/javascript; charset=utf-8'))
+app.get('/net.js', (res, req) => sendFile(res, path.join(clientDir, 'net.js'), 'application/javascript; charset=utf-8'))
+app.get('/scene.js', (res, req) => sendFile(res, path.join(clientDir, 'scene.js'), 'application/javascript; charset=utf-8'))
+app.get('/controls.js', (res, req) => sendFile(res, path.join(clientDir, 'controls.js'), 'application/javascript; charset=utf-8'))
+app.get('/favicon.ico', (res, req) => {
+  withCommonHeaders(res)
+    .writeHeader('Content-Type', 'image/x-icon')
+    .end(Buffer.alloc(0));
+})
 
 app.listen(PORT, (ok) => {
   if (ok) {

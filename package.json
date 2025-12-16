@@ -3,15 +3,18 @@
   "private": true,
   "version": "0.1.0",
   "type": "commonjs",
+  "main": "electron-main.js",
   "scripts": {
     "start-dev": "nodemon server/index.js",
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "desktop": "electron ."
   },
   "dependencies": {
     "nanoid": "^5.0.0",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.52.0"
   },
   "devDependencies": {
-    "nodemon": "^3.0.0"
+    "nodemon": "^3.0.0",
+    "electron": "^30.0.0"
   }
 }
