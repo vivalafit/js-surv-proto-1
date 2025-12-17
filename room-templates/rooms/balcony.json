@@ -1,0 +1,10 @@
+[
+  {
+    "id": "balcony_01",
+    "type": "balcony",
+    "size": { "w": 1.0, "d": 3.0, "h": 3.0 },
+    "doors": [
+      { "id": "A", "wall": "E", "offset": 0.8, "width": 0.9, "height": 2.1 }
+    ]
+  }
+]

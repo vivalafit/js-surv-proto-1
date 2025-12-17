@@ -1,0 +1,13 @@
+[
+  {
+    "id": "livingroom_01",
+    "type": "livingroom",
+    "size": { "w": 4.0, "d": 4.0, "h": 3.0 },
+    "doors": [
+      { "id": "A", "wall": "W", "offset": 2.0, "width": 1.0, "height": 2.1 },
+      { "id": "B", "wall": "N", "offset": 1.5, "width": 0.9, "height": 2.1 },
+      { "id": "C", "wall": "S", "offset": 1.5, "width": 0.9, "height": 2.1 },
+      { "id": "D", "wall": "E", "offset": 2.0, "width": 0.9, "height": 2.1 }
+    ]
+  }
+]

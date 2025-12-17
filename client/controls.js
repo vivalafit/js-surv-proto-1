@@ -2,16 +2,8 @@ export function initControls(ctx, canvas) {
   const { engine, scene, camera, aggregates, walkSpeed, flySpeed, walls } = ctx;
 
   const keys = {};
-  const jumpSpeed = 7;
+  const flyMode = true;
   const groundRayLen = 2.2;
-  let prevSpace = false;
-  let debugGrounded = false;
-  let velY = 0;
-  const gravity = -20;
-  const eyeHeight = 1.7; // standing eye height
-  const crouchHeight = 1.0;
-  let currentHeight = eyeHeight;
-  const crouchLerp = 10; // how fast we change height (1/s)
   const colliderRadius = 0.45;
 
   window.addEventListener('keydown', (e) => { keys[e.code] = true; if (['Space', 'ControlLeft'].includes(e.code)) e.preventDefault(); });
@@ -43,28 +35,17 @@ export function initControls(ctx, canvas) {
       }
     }
 
-    // Ground check + jump/gravity
-    const groundHit = getGroundHit();
-    const grounded = groundHit && (camera.position.y - groundHit.pickedPoint.y) <= eyeHeight + 0.05;
-    debugGrounded = grounded;
-    const wantJump = keys['Space'] && !prevSpace;
-    if (wantJump && grounded) {
-      velY = jumpSpeed;
-    }
-    prevSpace = keys['Space'] || false;
-
-    velY += gravity * dt;
-    camera.position.y += velY * dt;
-
-    // Crouch/stand height adjustment (only meaningful when grounded)
-    const targetHeight = grounded && keys['ControlLeft'] ? crouchHeight : eyeHeight;
-    const lerp = Math.min(1, crouchLerp * dt);
-    currentHeight = currentHeight + (targetHeight - currentHeight) * lerp;
-
-    // Snap to ground
-    if (grounded && velY < 0) {
-      camera.position.y = groundHit.pickedPoint.y + currentHeight;
-      velY = 0;
+    if (flyMode) {
+      if (keys['Space']) camera.position.y += flySpeed * dt;
+      if (keys['ControlLeft']) camera.position.y -= flySpeed * dt;
+    } else {
+      // Grounded/jump logic (not used in fly mode)
+      const groundHit = getGroundHit();
+      const grounded = groundHit && (camera.position.y - groundHit.pickedPoint.y) <= 1.8;
+      const wantJump = keys['Space'];
+      if (wantJump && grounded) camera.position.y += 0.1;
+      if (keys['ControlLeft']) camera.position.y -= flySpeed * dt;
+      if (grounded) camera.position.y = Math.max(camera.position.y, groundHit.pickedPoint.y + 1.7);
     }
   });
 
@@ -98,12 +79,5 @@ export function initControls(ctx, canvas) {
   }
 
   // Debug overlay in console every second
-  let lastDbg = 0;
-  scene.onAfterRenderObservable.add(() => {
-    const now = performance.now();
-    if (now - lastDbg > 1000) {
-      lastDbg = now;
-      console.log(`grounded=${debugGrounded} velY=${velY.toFixed(2)} posY=${camera.position.y.toFixed(2)}`);
-    }
-  });
+  // (disabled for now)
 }

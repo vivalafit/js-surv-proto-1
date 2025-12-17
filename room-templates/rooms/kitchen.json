@@ -1,0 +1,10 @@
+[
+  {
+    "id": "kitchen_01",
+    "type": "kitchen",
+    "size": { "w": 3.0, "d": 4.0, "h": 3.0 },
+    "doors": [
+      { "id": "A", "wall": "W", "offset": 1.5, "width": 0.9, "height": 2.1 }
+    ]
+  }
+]

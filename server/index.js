@@ -5,6 +5,7 @@ const path = require('path');
 
 const PORT = 3000;
 const clientDir = path.join(__dirname, '..', 'client');
+const templateDir = path.join(__dirname, '..', 'room-templates');
 const htmlPath  = path.join(clientDir, 'index.html');
 const jsPath    = path.join(clientDir, 'client.js');
 
@@ -100,6 +101,13 @@ app.get('/main.js', (res, req) => sendFile(res, path.join(clientDir, 'main.js'),
 app.get('/net.js', (res, req) => sendFile(res, path.join(clientDir, 'net.js'), 'application/javascript; charset=utf-8'))
 app.get('/scene.js', (res, req) => sendFile(res, path.join(clientDir, 'scene.js'), 'application/javascript; charset=utf-8'))
 app.get('/controls.js', (res, req) => sendFile(res, path.join(clientDir, 'controls.js'), 'application/javascript; charset=utf-8'))
+app.get('/apartment-layout.js', (res, req) => sendFile(res, path.join(clientDir, 'apartment-layout.js'), 'application/javascript; charset=utf-8'))
+app.get('/apartment-generator.js', (res, req) => sendFile(res, path.join(clientDir, 'apartment-generator.js'), 'application/javascript; charset=utf-8'))
+app.get('/room-templates/*', (res, req) => {
+  const rel = req.getUrl().replace('/room-templates/', '');
+  const filePath = path.join(templateDir, rel);
+  sendFile(res, filePath, 'application/json; charset=utf-8');
+})
 app.get('/favicon.ico', (res, req) => {
   withCommonHeaders(res)
     .writeHeader('Content-Type', 'image/x-icon')

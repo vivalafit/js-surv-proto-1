@@ -1,0 +1,12 @@
+[
+  {
+    "id": "corridor_01",
+    "type": "corridor",
+    "size": { "w": 3, "d": 5.0, "h": 3.0 },
+    "doors": [
+      { "id": "west", "wall": "W", "offset": 0.6, "width": 0.9, "height": 2.1 },
+      { "id": "east", "wall": "E", "offset": 0.6, "width": 0.9, "height": 2.1 },
+      { "id": "side", "wall": "S", "offset": 2.0, "width": 0.9, "height": 2.1 }
+    ]
+  }
+]

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "bedroom_01",
+    "type": "bedroom",
+    "size": { "w": 3.5, "d": 4.0, "h": 3.0 },
+    "doors": [
+      { "id": "A", "wall": "W", "offset": 1.0, "width": 0.9, "height": 2.1 }
+    ]
+  },
+  {
+    "id": "kidsroom_01",
+    "type": "kidsroom",
+    "size": { "w": 3.0, "d": 3.5, "h": 3.0 },
+    "doors": [
+      { "id": "A", "wall": "W", "offset": 0.9, "width": 0.9, "height": 2.1 }
+    ]
+  }
+]
