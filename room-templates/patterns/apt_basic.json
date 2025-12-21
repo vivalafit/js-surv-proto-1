@@ -3,14 +3,14 @@
   "allowMirrorX": true,
   "allowMirrorZ": false,
   "slots": [
-    { "slotId": "entry", "type": "entry", "pos": { "x": 0.0, "z": 0.0 }, "rot": 0, "pick": ["entry_01"], "attachTo": "corr" },
-    { "slotId": "corr",  "type": "corridor", "pos": { "x": 2.0, "z": 0.0 }, "rot": 0, "pick": ["corridor_01"], "attachTo": "living" },
-    { "slotId": "bath",  "type": "bathroom", "pos": { "x": 2.0, "z": 3.0 }, "rot": 0, "pick": ["bath_combined_01"], "attachTo": "corr" },
-    { "slotId": "stor",  "type": "storage",  "pos": { "x": 2.0, "z": -3.0 }, "rot": 0, "pick": ["storage_01"], "optional": true, "attachTo": "corr" },
-    { "slotId": "living","type": "livingroom","pos": { "x": 5.0, "z": 0.0 }, "rot": 0, "pick": ["livingroom_01"], "attachTo": "corr" },
-    { "slotId": "kitch", "type": "kitchen",  "pos": { "x": 5.0, "z": 4.5 }, "rot": 0, "pick": ["kitchen_01"], "attachTo": "living" },
-    { "slotId": "bed1",  "type": "bedroom",  "pos": { "x": 9.0, "z": 0.0 }, "rot": 0, "pick": ["bedroom_01"], "attachTo": "living" },
-    { "slotId": "bed2",  "type": "kidsroom", "pos": { "x": 9.0, "z": 3.5 }, "rot": 0, "pick": ["kidsroom_01"], "attachTo": "living" },
-    { "slotId": "balc",  "type": "balcony",  "pos": { "x": 11.5, "z": 0.0 }, "rot": 180, "pick": ["balcony_01"], "optional": true, "attachTo": "bed1" }
+    { "slotId": "entry", "type": "entry", "pos": { "x": 0.0, "z": 0.0 }, "rotate": 0, "pick": ["entry_01"] },
+    { "slotId": "corr",  "type": "corridor", "pos": { "x": 4.0, "z": 0.0 }, "rotate": 0, "pick": ["corridor_01"], "attachTo": "entry" },
+    { "slotId": "living","type": "livingroom","pos": { "x": 10.0, "z": 0.0 }, "rotate": 0, "pick": ["livingroom_01"], "attachTo": "corr" },
+    { "slotId": "bath",  "type": "bathroom", "pos": { "x": 4.0, "z": 4.0 }, "rotate": 0, "pick": ["bath_combined_01"], "attachTo": "corr" },
+    { "slotId": "stor",  "type": "storage",  "pos": { "x": 4.0, "z": -4.0 }, "rotate": 0, "pick": ["storage_01"], "optional": true, "attachTo": "corr" },
+    { "slotId": "kitch", "type": "kitchen",  "pos": { "x": 10.0, "z": 4.0 }, "rotate": 0, "pick": ["kitchen_01"], "attachTo": "living" },
+    { "slotId": "bed1",  "type": "bedroom",  "pos": { "x": 10.0, "z": -4.0 }, "rotate": 0, "pick": ["bedroom_01"], "attachTo": "living" },
+    { "slotId": "bed2",  "type": "kidsroom", "pos": { "x": 14.0, "z": 0.0 }, "rotate": 0, "pick": ["kidsroom_01"], "attachTo": "living" },
+    { "slotId": "balc",  "type": "balcony",  "pos": { "x": 14.0, "z": -4.0 }, "rotate": 180, "pick": ["balcony_01"], "optional": true, "attachTo": "bed1" }
   ]
 }

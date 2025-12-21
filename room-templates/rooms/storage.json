@@ -2,9 +2,9 @@
   {
     "id": "storage_01",
     "type": "storage",
-    "size": { "w": 1.5, "d": 1.5, "h": 3.0 },
+    "size": { "w": 2.0, "d": 2.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "W", "offset": 0.6, "width": 0.8, "height": 2.0 }
+      { "id": "A", "wall": "W", "offset": 0.5, "width": 1.0, "height": 2.0 }
     ]
   }
 ]

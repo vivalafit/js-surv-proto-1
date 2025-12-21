@@ -10,6 +10,8 @@ export async function initScene(canvas, fpsEl) {
   camera.inertia = 0.05;
   camera.angularSensibility = 2000;
   camera.attachControl(canvas, true);
+  // Ширший огляд (~85°), щоб було не так тісно.
+  camera.fov = BABYLON.Tools.ToRadians(85);
 
   const hemi = new BABYLON.HemisphericLight('hemi', new BABYLON.Vector3(0.5, 1, 0.2), scene);
   hemi.intensity = 0.15;
@@ -63,8 +65,9 @@ export async function initScene(canvas, fpsEl) {
   scene.onAfterRenderObservable.add(() => {
     if (fpsEl) fpsEl.textContent = `FPS: ${engine.getFps().toFixed(0)}`;
   });
-
-  const { walls } = await buildLayout(scene, shadowGen);
+  // debug bounds false/true
+  const { walls } = await buildLayout(scene, shadowGen, { debugBounds: false });
+  // const { walls } = await buildLayout(scene, shadowGen, { debugBounds: true });
 
   engine.runRenderLoop(() => scene.render());
   window.addEventListener('resize', () => engine.resize());
