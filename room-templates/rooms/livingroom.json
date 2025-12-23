@@ -9,5 +9,36 @@
       { "id": "C", "wall": "S", "offset": 3.5, "width": 1.0, "height": 2.1 },
       { "id": "D", "wall": "E", "offset": 3.5, "width": 1.0, "height": 2.1 }
     ]
+  },
+  {
+    "id": "livingroom_02_cozy",
+    "type": "livingroom",
+    "size": { "w": 6.0, "d": 6.0, "h": 3.0 },
+    "doors": [
+      { "id": "A", "wall": "W", "offset": 2.5, "width": 1.0, "height": 2.1 },
+      { "id": "B", "wall": "N", "offset": 2.5, "width": 1.0, "height": 2.1 },
+      { "id": "C", "wall": "E", "offset": 2.5, "width": 1.0, "height": 2.1 }
+    ]
+  },
+  {
+    "id": "livingroom_03_city17",
+    "type": "livingroom",
+    "size": { "w": 6.0, "d": 6.0, "h": 3.0 },
+    "doors": [
+      { "id": "A", "wall": "W", "offset": 2.5, "width": 1.0, "height": 2.1 },
+      { "id": "B", "wall": "N", "offset": 2.5, "width": 1.0, "height": 2.1 },
+      { "id": "C", "wall": "E", "offset": 2.5, "width": 1.0, "height": 2.1 },
+      { "id": "D", "wall": "S", "offset": 2.5, "width": 1.0, "height": 2.1 }
+    ]
+  },
+  {
+    "id": "livingroom_04_tenement",
+    "type": "livingroom",
+    "size": { "w": 6.0, "d": 6.0, "h": 3.0 },
+    "doors": [
+      { "id": "A", "wall": "W", "offset": 2.5, "width": 1.0, "height": 2.1 },
+      { "id": "B", "wall": "N", "offset": 2.5, "width": 1.0, "height": 2.1 },
+      { "id": "C", "wall": "E", "offset": 2.5, "width": 1.0, "height": 2.1 }
+    ]
   }
 ]

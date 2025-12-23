@@ -14,5 +14,30 @@
     "doors": [
       { "id": "A", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 }
     ]
+  },
+  {
+    "id": "bedroom_02_cozy",
+    "type": "bedroom",
+    "size": { "w": 4.0, "d": 4.0, "h": 3.0 },
+    "doors": [
+      { "id": "A", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 },
+      { "id": "B", "wall": "S", "offset": 1.5, "width": 1.0, "height": 2.1 }
+    ]
+  },
+  {
+    "id": "bedroom_03_small",
+    "type": "bedroom",
+    "size": { "w": 3.0, "d": 4.0, "h": 3.0 },
+    "doors": [
+      { "id": "A", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 }
+    ]
+  },
+  {
+    "id": "bedroom_04_tenement",
+    "type": "bedroom",
+    "size": { "w": 4.0, "d": 4.0, "h": 3.0 },
+    "doors": [
+      { "id": "A", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 }
+    ]
   }
 ]

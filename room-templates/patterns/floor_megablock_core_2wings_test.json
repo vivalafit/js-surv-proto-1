@@ -1,0 +1,28 @@
+{
+  "id": "floor_megablock_core_2wings_test",
+  "allowMirrorX": true,
+  "allowMirrorZ": true,
+  "slots": [
+    { "slotId": "core", "type": "lobby", "pos": { "x": 0.0, "z": 0.0 }, "rotate": 0, "pick": ["livingroom_01"] },
+
+    { "slotId": "stairs", "type": "stairs_internal", "pos": { "x": 0.0, "z": 10.0 }, "rotate": 0, "pick": ["stairs_half_01"], "attachTo": "core" },
+    { "slotId": "service_core", "type": "utility", "pos": { "x": 0.0, "z": 14.0 }, "rotate": 0, "pick": ["utility_02_metercloset"], "optional": true, "attachTo": "stairs" },
+
+    { "slotId": "e_deck_1", "type": "corridor", "pos": { "x": 10.0, "z": 0.0 }, "rotate": 0, "pick": ["corridor_02_short"], "attachTo": "core" },
+    { "slotId": "e_deck_2", "type": "corridor", "pos": { "x": 14.0, "z": 0.0 }, "rotate": 0, "pick": ["corridor_03_narrow"], "attachTo": "e_deck_1" },
+
+    { "slotId": "w_deck_1", "type": "corridor", "pos": { "x": -10.0, "z": 0.0 }, "rotate": 0, "pick": ["corridor_02_short"], "attachTo": "core" },
+    { "slotId": "w_deck_2", "type": "corridor", "pos": { "x": -14.0, "z": 4.0 }, "rotate": 0, "pick": ["corridor_04_Lbend"], "attachTo": "w_deck_1" },
+
+    { "slotId": "e_aptdoor_1", "type": "entry", "pos": { "x": 10.0, "z": 4.0 }, "rotate": 0, "pick": ["entry_04_tenement"], "attachTo": "e_deck_1", "optional": false },
+    { "slotId": "e_aptdoor_2", "type": "entry", "pos": { "x": 14.0, "z": -4.0 }, "rotate": 0, "pick": ["entry_03_city17"], "attachTo": "e_deck_2", "optional": true },
+    { "slotId": "e_aptdoor_3", "type": "entry", "pos": { "x": 16.0, "z": 4.0 }, "rotate": 0, "pick": ["entry_02_division"], "attachTo": "e_deck_2", "optional": true },
+
+    { "slotId": "w_aptdoor_1", "type": "entry", "pos": { "x": -10.0, "z": 4.0 }, "rotate": 0, "pick": ["entry_04_tenement"], "attachTo": "w_deck_1", "optional": false },
+    { "slotId": "w_aptdoor_2", "type": "entry", "pos": { "x": -14.0, "z": -4.0 }, "rotate": 0, "pick": ["entry_03_city17"], "attachTo": "w_deck_2", "optional": true },
+    { "slotId": "w_aptdoor_3", "type": "entry", "pos": { "x": -16.0, "z": 4.0 }, "rotate": 0, "pick": ["entry_02_division"], "attachTo": "w_deck_2", "optional": true },
+
+    { "slotId": "e_niche_util", "type": "utility", "pos": { "x": 12.0, "z": 8.0 }, "rotate": 0, "pick": ["utility_01_panel"], "optional": true, "attachTo": "e_deck_1" },
+    { "slotId": "w_niche_stor", "type": "storage", "pos": { "x": -12.0, "z": -8.0 }, "rotate": 0, "pick": ["storage_02_closet"], "optional": true, "attachTo": "w_deck_1" }
+  ]
+}

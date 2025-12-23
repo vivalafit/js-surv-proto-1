@@ -1,0 +1,24 @@
+{
+  "id": "apt_city17_squeeze_2br",
+  "allowMirrorX": true,
+  "allowMirrorZ": true,
+  "slots": [
+    { "slotId": "entry", "type": "entry", "pos": { "x": 0.0, "z": 0.0 }, "rotate": 0, "pick": ["entry_03_city17"] },
+
+    { "slotId": "corr", "type": "corridor", "pos": { "x": 4.0, "z": 0.0 }, "rotate": 0, "pick": ["corridor_03_narrow"], "attachTo": "entry" },
+
+    { "slotId": "util", "type": "utility", "pos": { "x": 4.0, "z": 4.0 }, "rotate": 0, "pick": ["utility_03_ductroom"], "optional": true, "attachTo": "corr" },
+    { "slotId": "stor", "type": "storage", "pos": { "x": 4.0, "z": -4.0 }, "rotate": 0, "pick": ["storage_01"], "optional": true, "attachTo": "corr" },
+
+    { "slotId": "living", "type": "livingroom", "pos": { "x": 10.0, "z": 0.0 }, "rotate": 0, "pick": ["livingroom_03_city17"], "attachTo": "corr" },
+
+    { "slotId": "kitch", "type": "kitchen", "pos": { "x": 10.0, "z": 4.0 }, "rotate": 0, "pick": ["kitchen_04_tight"], "attachTo": "living" },
+
+    { "slotId": "bath", "type": "bathroom", "pos": { "x": 6.0, "z": 2.0 }, "rotate": 0, "pick": ["bath_04_grimy"], "attachTo": "corr" },
+
+    { "slotId": "bed1", "type": "bedroom", "pos": { "x": 10.0, "z": -4.0 }, "rotate": 0, "pick": ["bedroom_03_small"], "attachTo": "living" },
+    { "slotId": "bed2", "type": "kidsroom", "pos": { "x": 14.0, "z": -4.0 }, "rotate": 0, "pick": ["kidsroom_01"], "attachTo": "bed1" },
+
+    { "slotId": "balc", "type": "balcony", "pos": { "x": 14.0, "z": 4.0 }, "rotate": 180, "pick": ["balcony_03_fireescape"], "optional": true, "attachTo": "kitch" }
+  ]
+}

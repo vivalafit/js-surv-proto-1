@@ -1,0 +1,25 @@
+{
+  "id": "apt_brutal_deck_Lwing_2br",
+  "allowMirrorX": true,
+  "allowMirrorZ": true,
+  "slots": [
+    { "slotId": "entry", "type": "entry", "pos": { "x": 0.0, "z": 0.0 }, "rotate": 0, "pick": ["entry_04_tenement"] },
+
+    { "slotId": "corrA", "type": "corridor", "pos": { "x": 4.0, "z": 0.0 }, "rotate": 0, "pick": ["corridor_03_narrow"], "attachTo": "entry" },
+
+    { "slotId": "utilA", "type": "utility", "pos": { "x": 4.0, "z": 4.0 }, "rotate": 0, "pick": ["utility_02_metercloset"], "optional": true, "attachTo": "corrA" },
+    { "slotId": "storA", "type": "storage", "pos": { "x": 4.0, "z": -4.0 }, "rotate": 0, "pick": ["storage_02_closet"], "optional": true, "attachTo": "corrA" },
+
+    { "slotId": "living", "type": "livingroom", "pos": { "x": 10.0, "z": 0.0 }, "rotate": 0, "pick": ["livingroom_04_tenement"], "attachTo": "corrA" },
+
+    { "slotId": "kitch", "type": "kitchen", "pos": { "x": 14.0, "z": 0.0 }, "rotate": 0, "pick": ["kitchen_03_boxy"], "attachTo": "living" },
+    { "slotId": "balc", "type": "balcony", "pos": { "x": 18.0, "z": 0.0 }, "rotate": 180, "pick": ["balcony_02_loggia"], "optional": true, "attachTo": "kitch" },
+
+    { "slotId": "corrB", "type": "corridor", "pos": { "x": 10.0, "z": 6.0 }, "rotate": 0, "pick": ["corridor_04_Lbend"], "attachTo": "living" },
+
+    { "slotId": "bath", "type": "bathroom", "pos": { "x": 6.0, "z": 2.0 }, "rotate": 0, "pick": ["bath_04_grimy"], "attachTo": "corrA" },
+
+    { "slotId": "bed1", "type": "bedroom", "pos": { "x": 14.0, "z": 6.0 }, "rotate": 0, "pick": ["bedroom_04_tenement"], "attachTo": "corrB" },
+    { "slotId": "bed2", "type": "kidsroom", "pos": { "x": 10.0, "z": 10.0 }, "rotate": 0, "pick": ["kidsroom_01"], "attachTo": "corrB" }
+  ]
+}

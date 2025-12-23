@@ -66,7 +66,7 @@ export async function initScene(canvas, fpsEl) {
     if (fpsEl) fpsEl.textContent = `FPS: ${engine.getFps().toFixed(0)}`;
   });
   // debug bounds false/true
-  const { walls } = await buildLayout(scene, shadowGen, { debugBounds: false });
+  const { walls } = await buildLayout(scene, shadowGen, { debugBounds: false, patternPath: '/room-templates/patterns/apt_splitlvl_duplex_1br.json' });
   // const { walls } = await buildLayout(scene, shadowGen, { debugBounds: true });
 
   engine.runRenderLoop(() => scene.render());

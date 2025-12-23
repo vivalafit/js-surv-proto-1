@@ -11,7 +11,7 @@ import { generateApartmentVariants } from './apartment-generator.js';
 //   gridStep      — крок сітки (метри)
 //   debugBounds   — показувати жовтий wireframe-бокс кімнати
 export async function buildLayout(scene, shadowGen, opts = {}) {
-  const roomFiles = ['entry', 'corridor', 'bathroom', 'kitchen', 'bedroom', 'livingroom', 'storage', 'balcony'];
+  const roomFiles = ['entry', 'corridor', 'bathroom', 'kitchen', 'bedroom', 'livingroom', 'storage', 'balcony', 'utility', 'stairs_internal'];
   const patternPath = opts.patternPath || '/room-templates/patterns/apt_basic.json';
   const layoutScale = opts.layoutScale || 1;
   const groundSize = opts.groundSize || 80;
@@ -113,7 +113,9 @@ function colorByType(type) {
     kidsroom: new BABYLON.Color3(0.45, 0.5, 0.4),
     livingroom: new BABYLON.Color3(0.45, 0.35, 0.35),
     storage: new BABYLON.Color3(0.35, 0.35, 0.3),
-    balcony: new BABYLON.Color3(0.4, 0.35, 0.3)
+    balcony: new BABYLON.Color3(0.4, 0.35, 0.3),
+    utility: new BABYLON.Color3(0.30, 0.33, 0.28),
+    stairs_internal: new BABYLON.Color3(0.28, 0.28, 0.32),
   };
   return map[type] || new BABYLON.Color3(0.5, 0.5, 0.5);
 }

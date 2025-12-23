@@ -8,5 +8,37 @@
       { "id": "east", "wall": "E", "offset": 1.5, "width": 1.0, "height": 2.1 },
       { "id": "side", "wall": "S", "offset": 1.5, "width": 1.0, "height": 2.1 }
     ]
+  },
+  {
+    "id": "corridor_02_short",
+    "type": "corridor",
+    "size": { "w": 4.0, "d": 4.0, "h": 3.0 },
+    "doors": [
+      { "id": "west", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 },
+      { "id": "east", "wall": "E", "offset": 1.5, "width": 1.0, "height": 2.1 },
+      { "id": "north", "wall": "N", "offset": 1.5, "width": 1.0, "height": 2.1 },
+      { "id": "south", "wall": "S", "offset": 1.5, "width": 1.0, "height": 2.1 }
+    ]
+  },
+  {
+    "id": "corridor_03_narrow",
+    "type": "corridor",
+    "size": { "w": 4.0, "d": 3.0, "h": 3.0 },
+    "doors": [
+      { "id": "west", "wall": "W", "offset": 1.0, "width": 1.0, "height": 2.1 },
+      { "id": "east", "wall": "E", "offset": 1.0, "width": 1.0, "height": 2.1 },
+      { "id": "sideN", "wall": "N", "offset": 1.5, "width": 1.0, "height": 2.1 },
+      { "id": "sideS", "wall": "S", "offset": 1.5, "width": 1.0, "height": 2.1 }
+    ]
+  },
+  {
+    "id": "corridor_04_Lbend",
+    "type": "corridor",
+    "size": { "w": 4.0, "d": 4.0, "h": 3.0 },
+    "doors": [
+      { "id": "west", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 },
+      { "id": "north", "wall": "N", "offset": 1.5, "width": 1.0, "height": 2.1 },
+      { "id": "south", "wall": "S", "offset": 1.5, "width": 1.0, "height": 2.1 }
+    ]
   }
 ]

@@ -1,0 +1,24 @@
+{
+  "id": "apt_splitlvl_duplex_1br",
+  "allowMirrorX": true,
+  "allowMirrorZ": true,
+  "slots": [
+    { "slotId": "entry", "type": "entry", "pos": { "x": 0.0, "z": 0.0 }, "rotate": 0, "pick": ["entry_04_tenement"] },
+
+    { "slotId": "corr", "type": "corridor", "pos": { "x": 4.0, "z": 0.0 }, "rotate": 0, "pick": ["corridor_01"], "attachTo": "entry" },
+
+    { "slotId": "stairs", "type": "stairs_internal", "pos": { "x": 8.0, "z": 0.0 }, "rotate": 0, "pick": ["stairs_half_01"], "attachTo": "corr" },
+
+    { "slotId": "living", "type": "livingroom", "pos": { "x": 12.0, "z": 0.0 }, "rotate": 0, "pick": ["livingroom_04_tenement"], "attachTo": "stairs" },
+
+    { "slotId": "kitch", "type": "kitchen", "pos": { "x": 12.0, "z": 4.0 }, "rotate": 0, "pick": ["kitchen_03_boxy"], "attachTo": "living" },
+
+    { "slotId": "bed", "type": "bedroom", "pos": { "x": 12.0, "z": -4.0 }, "rotate": 0, "pick": ["bedroom_04_tenement"], "attachTo": "living" },
+
+    { "slotId": "bath", "type": "bathroom", "pos": { "x": 8.0, "z": -4.0 }, "rotate": 0, "pick": ["bath_03_tight"], "attachTo": "stairs" },
+
+    { "slotId": "util", "type": "utility", "pos": { "x": 8.0, "z": 4.0 }, "rotate": 0, "pick": ["utility_02_metercloset"], "optional": true, "attachTo": "stairs" },
+
+    { "slotId": "balc", "type": "balcony", "pos": { "x": 16.0, "z": 0.0 }, "rotate": 180, "pick": ["balcony_02_loggia"], "optional": true, "attachTo": "living" }
+  ]
+}
