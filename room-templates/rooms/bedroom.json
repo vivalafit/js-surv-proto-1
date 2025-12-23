@@ -4,7 +4,7 @@
     "type": "bedroom",
     "size": { "w": 4.0, "d": 4.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 }
+      { "id": "A", "wall": "W", "offset": 1.4, "width": 1.2, "height": 2.1 }
     ]
   },
   {
@@ -12,7 +12,7 @@
     "type": "kidsroom",
     "size": { "w": 4.0, "d": 4.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 }
+      { "id": "A", "wall": "W", "offset": 1.4, "width": 1.2, "height": 2.1 }
     ]
   },
   {
@@ -20,8 +20,8 @@
     "type": "bedroom",
     "size": { "w": 4.0, "d": 4.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 },
-      { "id": "B", "wall": "S", "offset": 1.5, "width": 1.0, "height": 2.1 }
+      { "id": "A", "wall": "W", "offset": 1.4, "width": 1.2, "height": 2.1 },
+      { "id": "B", "wall": "S", "offset": 1.4, "width": 1.2, "height": 2.1 }
     ]
   },
   {
@@ -29,7 +29,7 @@
     "type": "bedroom",
     "size": { "w": 3.0, "d": 4.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 }
+      { "id": "A", "wall": "W", "offset": 1.4, "width": 1.2, "height": 2.1 }
     ]
   },
   {
@@ -37,7 +37,7 @@
     "type": "bedroom",
     "size": { "w": 4.0, "d": 4.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 }
+      { "id": "A", "wall": "W", "offset": 1.4, "width": 1.2, "height": 2.1 }
     ]
   }
 ]

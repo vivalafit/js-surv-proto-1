@@ -4,7 +4,7 @@
     "type": "storage",
     "size": { "w": 2.0, "d": 2.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "W", "offset": 0.5, "width": 1.0, "height": 2.0 }
+      { "id": "A", "wall": "W", "offset": 0.4, "width": 1.2, "height": 2.0 }
     ]
   },
   {
@@ -12,7 +12,7 @@
     "type": "storage",
     "size": { "w": 2.0, "d": 2.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "E", "offset": 0.5, "width": 1.0, "height": 2.0 }
+      { "id": "A", "wall": "E", "offset": 0.4, "width": 1.2, "height": 2.0 }
     ]
   }
 ]

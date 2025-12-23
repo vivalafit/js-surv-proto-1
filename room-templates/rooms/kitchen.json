@@ -4,7 +4,7 @@
     "type": "kitchen",
     "size": { "w": 4.0, "d": 4.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "W", "offset": 1.5, "width": 1.0, "height": 2.1 }
+      { "id": "A", "wall": "W", "offset": 1.4, "width": 1.2, "height": 2.1 }
     ]
   },
   {
@@ -12,7 +12,7 @@
     "type": "kitchen",
     "size": { "w": 4.0, "d": 4.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "S", "offset": 1.5, "width": 1.0, "height": 2.1 }
+      { "id": "A", "wall": "S", "offset": 1.4, "width": 1.2, "height": 2.1 }
     ]
   },
   {
@@ -20,7 +20,7 @@
     "type": "kitchen",
     "size": { "w": 3.0, "d": 3.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "W", "offset": 1.0, "width": 1.0, "height": 2.1 }
+      { "id": "A", "wall": "W", "offset": 1.0, "width": 1.2, "height": 2.1 }
     ]
   },
   {
@@ -28,7 +28,7 @@
     "type": "kitchen",
     "size": { "w": 3.0, "d": 3.0, "h": 3.0 },
     "doors": [
-      { "id": "A", "wall": "S", "offset": 1.0, "width": 1.0, "height": 2.1 }
+      { "id": "A", "wall": "S", "offset": 1.0, "width": 1.2, "height": 2.1 }
     ]
   }
 ]
