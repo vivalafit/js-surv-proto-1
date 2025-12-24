@@ -2,20 +2,27 @@ export function initControls(ctx, canvas) {
   const { engine, scene, camera, aggregates, walkSpeed, flySpeed, walls } = ctx;
 
   const keys = {};
-  const flyMode = true;
+  let flyMode = true;
+  let inputEnabled = true;
+  let yVel = 0;
+  const gravity = -18;
+  const jumpSpeed = 6;
+  const eyeHeight = 1.7;
   const groundRayLen = 2.2;
-  const colliderRadius = 0.45;
+  const colliderRadius = 0.35;
 
   window.addEventListener('keydown', (e) => { keys[e.code] = true; if (['Space', 'ControlLeft'].includes(e.code)) e.preventDefault(); });
   window.addEventListener('keyup',   (e) => { keys[e.code] = false; });
 
   canvas.addEventListener('click', () => {
+    if (!inputEnabled) return;
     if (document.pointerLockElement !== canvas) {
       canvas.requestPointerLock?.();
     }
   });
 
   scene.onBeforeRenderObservable.add(() => {
+    if (!inputEnabled) return;
     const dt = engine.getDeltaTime() / 1000;
     const forward = camera.getDirection(BABYLON.Axis.Z);
     const right   = camera.getDirection(BABYLON.Axis.X);
@@ -32,6 +39,12 @@ export function initControls(ctx, canvas) {
       const candidate = camera.position.add(move);
       if (!isBlocked(candidate)) {
         camera.position.copyFrom(candidate);
+      } else {
+        // Try sliding along walls instead of hard stop.
+        const candX = new BABYLON.Vector3(camera.position.x + move.x, camera.position.y, camera.position.z);
+        if (!isBlocked(candX)) camera.position.x = candX.x;
+        const candZ = new BABYLON.Vector3(camera.position.x, camera.position.y, camera.position.z + move.z);
+        if (!isBlocked(candZ)) camera.position.z = candZ.z;
       }
     }
 
@@ -39,17 +52,26 @@ export function initControls(ctx, canvas) {
       if (keys['Space']) camera.position.y += flySpeed * dt;
       if (keys['ControlLeft']) camera.position.y -= flySpeed * dt;
     } else {
-      // Grounded/jump logic (not used in fly mode)
+      // Grounded/jump logic
       const groundHit = getGroundHit();
-      const grounded = groundHit && (camera.position.y - groundHit.pickedPoint.y) <= 1.8;
-      const wantJump = keys['Space'];
-      if (wantJump && grounded) camera.position.y += 0.1;
-      if (keys['ControlLeft']) camera.position.y -= flySpeed * dt;
-      if (grounded) camera.position.y = Math.max(camera.position.y, groundHit.pickedPoint.y + 1.7);
+      const groundY = groundHit?.pickedPoint?.y ?? -Infinity;
+      const grounded = groundHit && camera.position.y <= groundY + eyeHeight + 0.05 && yVel <= 0;
+      if (grounded) {
+        camera.position.y = groundY + eyeHeight;
+        yVel = 0;
+      }
+      if (keys['Space'] && grounded) yVel = jumpSpeed;
+      yVel += gravity * dt;
+      camera.position.y += yVel * dt;
+      if (grounded && camera.position.y < groundY + eyeHeight) {
+        camera.position.y = groundY + eyeHeight;
+        yVel = 0;
+      }
     }
   });
 
   canvas.addEventListener('mousedown', (e) => {
+    if (!inputEnabled) return;
     if (e.button !== 0) return;
     const pick = scene.pick(scene.pointerX, scene.pointerY, mesh => aggregates.has(mesh));
     if (pick?.pickedMesh) {
@@ -63,7 +85,7 @@ export function initControls(ctx, canvas) {
   function getGroundHit() {
     const origin = camera.position;
     const ray = new BABYLON.Ray(origin, new BABYLON.Vector3(0, -1, 0), groundRayLen);
-    const hit = scene.pickWithRay(ray, mesh => mesh.checkCollisions);
+    const hit = scene.pickWithRay(ray, mesh => mesh?.metadata?.isFloor || mesh?.metadata?.isGround || mesh.checkCollisions);
     return hit?.hit ? hit : null;
   }
 
@@ -78,6 +100,22 @@ export function initControls(ctx, canvas) {
     return false;
   }
 
-  // Debug overlay in console every second
-  // (disabled for now)
+  function snapToGround() {
+    const hit = getGroundHit();
+    if (hit?.pickedPoint) {
+      camera.position.y = hit.pickedPoint.y + eyeHeight;
+      yVel = 0;
+    }
+  }
+
+  function setFlyMode(enabled) {
+    flyMode = !!enabled;
+    if (!flyMode) snapToGround();
+  }
+
+  function setInputEnabled(enabled) {
+    inputEnabled = !!enabled;
+  }
+
+  return { setFlyMode, getFlyMode: () => flyMode, setInputEnabled };
 }

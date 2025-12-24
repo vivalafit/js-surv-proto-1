@@ -44,6 +44,7 @@ export function generateApartmentVariants({ pattern, templates, variants = 1, in
 // placed     — Map уже розміщених кімнат (slotId -> room)
 // Повертає room {pos, rotate, tpl, ...} або null якщо не влізла
 function placeRoom(template, slot, basePos, parentRoom, placed, gridStep) {
+  const defaultDoorWidth = 1.2;
   const rotateCandidates = [0, 90, 180, 270];
   let bestRotate = slot.rotate || 0;
   let attachDir = null;
@@ -51,6 +52,10 @@ function placeRoom(template, slot, basePos, parentRoom, placed, gridStep) {
   let parentWall = null;
   let childDoor = null;
   let parentDoor = null;
+  let parentDoorCenter = null;
+  let childDoorCenter = null;
+  let parentDoorWidth = null;
+  let childDoorWidth = null;
   if (parentRoom) {
     attachDir = pickAttachDir(basePos, parentRoom.basePos || parentRoom.pos);
     const toParent = dirToParentVector(attachDir);
@@ -84,8 +89,13 @@ function placeRoom(template, slot, basePos, parentRoom, placed, gridStep) {
     if (attachDir === 'E' || attachDir === 'W') {
       const parentAxis = parentSize.d;
       const childAxis = childSize.d;
-      const parentDoorCenter = getDoorCenterOffset(parentDoor, parentAxis);
-      const childDoorCenter = getDoorCenterOffset(childDoor, childAxis);
+      parentDoorWidth = parentDoor?.width ?? defaultDoorWidth;
+      childDoorWidth = childDoor?.width ?? defaultDoorWidth;
+      const baseOffset = computePerpOffset(basePos, parentRoom.basePos || parentRoom.pos, attachDir, parentSize, childSize);
+      const useOffset = Math.abs(baseOffset) > 1e-3;
+      const fallbackParentCenter = getDoorCenterOffset(parentDoor, parentAxis, defaultDoorWidth);
+      parentDoorCenter = useOffset ? (parentAxis / 2 + baseOffset) : fallbackParentCenter;
+      childDoorCenter = getDoorCenterOffset(childDoor, childAxis, defaultDoorWidth);
       const targetZ = parentCenter.z - parentAxis / 2 + parentDoorCenter + childAxis / 2 - childDoorCenter;
       const maxOffset = Math.max(0, parentAxis / 2 - childAxis / 2);
       const clampedZ = clamp(targetZ, parentCenter.z - maxOffset, parentCenter.z + maxOffset);
@@ -96,8 +106,13 @@ function placeRoom(template, slot, basePos, parentRoom, placed, gridStep) {
     } else {
       const parentAxis = parentSize.w;
       const childAxis = childSize.w;
-      const parentDoorCenter = getDoorCenterOffset(parentDoor, parentAxis);
-      const childDoorCenter = getDoorCenterOffset(childDoor, childAxis);
+      parentDoorWidth = parentDoor?.width ?? defaultDoorWidth;
+      childDoorWidth = childDoor?.width ?? defaultDoorWidth;
+      const baseOffset = computePerpOffset(basePos, parentRoom.basePos || parentRoom.pos, attachDir, parentSize, childSize);
+      const useOffset = Math.abs(baseOffset) > 1e-3;
+      const fallbackParentCenter = getDoorCenterOffset(parentDoor, parentAxis, defaultDoorWidth);
+      parentDoorCenter = useOffset ? (parentAxis / 2 + baseOffset) : fallbackParentCenter;
+      childDoorCenter = getDoorCenterOffset(childDoor, childAxis, defaultDoorWidth);
       const targetX = parentCenter.x - parentAxis / 2 + parentDoorCenter + childAxis / 2 - childDoorCenter;
       const maxOffset = Math.max(0, parentAxis / 2 - childAxis / 2);
       const clampedX = clamp(targetX, parentCenter.x - maxOffset, parentCenter.x + maxOffset);
@@ -116,6 +131,23 @@ function placeRoom(template, slot, basePos, parentRoom, placed, gridStep) {
     if (!box) return null;
     const overlap = findOverlap(box, placed);
     if (!overlap) {
+      if (parentRoom && attachDir) {
+        const parentSize = getSizeAfterRotate(parentRoom.tpl, parentRoom.rotate || 0);
+        const childSize = getSizeAfterRotate(template, bestRotate);
+        if (attachDir === 'E' || attachDir === 'W') {
+          const parentAxis = parentSize.d;
+          const childAxis = childSize.d;
+          const childCenter = childDoorCenter ?? getDoorCenterOffset(childDoor, childAxis, defaultDoorWidth);
+          parentDoorCenter = pos.z - parentRoom.pos.z + parentAxis / 2 - childAxis / 2 + childCenter;
+          childDoorCenter = childCenter;
+        } else {
+          const parentAxis = parentSize.w;
+          const childAxis = childSize.w;
+          const childCenter = childDoorCenter ?? getDoorCenterOffset(childDoor, childAxis, defaultDoorWidth);
+          parentDoorCenter = pos.x - parentRoom.pos.x + parentAxis / 2 - childAxis / 2 + childCenter;
+          childDoorCenter = childCenter;
+        }
+      }
       return {
         slotId: slot.slotId,
         type: slot.type,
@@ -127,19 +159,32 @@ function placeRoom(template, slot, basePos, parentRoom, placed, gridStep) {
         attachDir,
         attachWall: childWall,
         parentWall,
+        parentDoorCenter,
+        parentDoorWidth,
+        childDoorCenter,
+        childDoorWidth,
         basePos,
         attachDoor: childDoor,
         parentDoor
       };
     }
     // Зсуваємо вздовж осі найбільшого перекриття у протилежний бік, щоб коробки лише торкались.
-    const padding = 0.05;
+    const padding = 0.005;
     if (parentRoom && attachDir) {
       const attachAxis = (attachDir === 'E' || attachDir === 'W') ? 'x' : 'z';
       if (attachAxis === 'x') {
         pos = { x: pos.x, z: pos.z + (overlap.penZ + padding) * overlap.dirZ };
       } else {
         pos = { x: pos.x + (overlap.penX + padding) * overlap.dirX, z: pos.z };
+      }
+      const parentSize = getSizeAfterRotate(parentRoom.tpl, parentRoom.rotate || 0);
+      const childSize = getSizeAfterRotate(template, bestRotate);
+      if (attachDir === 'E' || attachDir === 'W') {
+        const maxOffset = Math.max(0, parentSize.d / 2 - childSize.d / 2);
+        pos = { x: pos.x, z: clamp(pos.z, parentRoom.pos.z - maxOffset, parentRoom.pos.z + maxOffset) };
+      } else {
+        const maxOffset = Math.max(0, parentSize.w / 2 - childSize.w / 2);
+        pos = { x: clamp(pos.x, parentRoom.pos.x - maxOffset, parentRoom.pos.x + maxOffset), z: pos.z };
       }
     } else if (overlap.penX > overlap.penZ) {
       pos = { x: pos.x + (overlap.penX + padding) * overlap.dirX, z: pos.z };
@@ -283,7 +328,7 @@ function clamp(v, min, max) {
   return Math.max(min, Math.min(max, v));
 }
 
-function getDoorCenterOffset(door, axisLen, defaultWidth = 1.0) {
+function getDoorCenterOffset(door, axisLen, defaultWidth = 1.2) {
   if (!door) return axisLen / 2;
   const width = door.width ?? defaultWidth;
   return (door.offset ?? 0) + width / 2;

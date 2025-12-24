@@ -20,6 +20,7 @@ export async function buildLayout(scene, shadowGen, opts = {}) {
   const debugBounds = opts.debugBounds || false;
 
   const walls = [];
+  const wallMeshes = [];
 
   const templates = {};
   for (const f of roomFiles) {
@@ -31,6 +32,8 @@ export async function buildLayout(scene, shadowGen, opts = {}) {
   // Ground
   const ground = BABYLON.MeshBuilder.CreateGround('ground', { width: groundSize, height: groundSize }, scene);
   ground.position.y = 0;
+  ground.checkCollisions = true;
+  ground.metadata = { isGround: true };
   ground.material = createGridMaterial(scene, groundSize, gridStep, gridEnabled);
   ground.receiveShadows = true;
 
@@ -41,60 +44,140 @@ export async function buildLayout(scene, shadowGen, opts = {}) {
     includeOptional: true,
     gridStep
   });
-  //поки що беремо перший варік який є
   const variant = variants[0] || { rooms: [] };
+  const rooms = variant.rooms.map(room => ({
+    ...room,
+    userDoors: room.userDoors || [],
+    root: null,
+    meshes: [],
+    wallMeshes: []
+  }));
 
+  const layout = {
+    scene,
+    shadowGen,
+    templates,
+    pattern,
+    rooms,
+    roomsById: new Map(),
+    walls,
+    wallMeshes,
+    ground,
+    gridStep,
+    layoutScale,
+    debugBounds
+  };
+  layout.rebuild = () => rebuildLayout(layout);
+
+  rebuildLayout(layout);
+  return layout;
+}
+
+function rebuildLayout(layout) {
+  const { scene, shadowGen, rooms, walls, wallMeshes, layoutScale, debugBounds } = layout;
+
+  for (const room of rooms) {
+    if (room.root) room.root.dispose();
+    room.root = null;
+    room.meshes = [];
+    room.wallMeshes = [];
+  }
+
+  walls.length = 0;
+  wallMeshes.length = 0;
+
+  layout.roomsById = new Map(rooms.map(room => [room.slotId, room]));
+  const autoDoors = buildAutoDoors(layout);
+
+  for (const room of rooms) {
+    const pos = {
+      x: (room.pos?.x || 0) * layoutScale,
+      z: (room.pos?.z || 0) * layoutScale
+    };
+    const extraDoors = mergeDoorLists(room, autoDoors.get(room.slotId));
+    const meshData = addRoomMeshes(scene, shadowGen, walls, room, pos, room.rotate || 0, debugBounds, extraDoors);
+    room.root = meshData.root;
+    room.meshes = meshData.meshes;
+    room.wallMeshes = meshData.wallMeshes;
+    wallMeshes.push(...meshData.wallMeshes);
+  }
+}
+
+function buildAutoDoors(layout) {
   const extraDoors = new Map();
-  const roomsById = new Map(variant.rooms.map(room => [room.slotId, room]));
-  for (const room of variant.rooms) {
+  for (const room of layout.rooms) {
     if (!room.attachTo || !room.attachWall || !room.parentWall) continue;
-    const parent = roomsById.get(room.attachTo);
+    const parent = layout.roomsById.get(room.attachTo);
     if (!parent) continue;
 
-    const childHasDoor = hasDoorOnWallRotated(room.tpl, room.rotate || 0, room.attachWall);
-    const parentHasDoor = hasDoorOnWallRotated(parent.tpl, parent.rotate || 0, room.parentWall);
+    const childWidth = room.childDoorWidth ?? room.attachDoor?.width ?? 1.2;
+    const parentWidth = room.parentDoorWidth ?? room.parentDoor?.width ?? 1.2;
+    const childCenter = room.childDoorCenter ?? (room.attachDoor ? room.attachDoor.offset + childWidth / 2 : null);
+    const parentCenter = room.parentDoorCenter ?? (room.parentDoor ? room.parentDoor.offset + parentWidth / 2 : null);
 
-    if (!childHasDoor) {
-      const childDoor = room.attachDoor;
+    const childMatches = childCenter !== null
+      ? hasDoorAtOffset(room.tpl, room.rotate || 0, room.attachWall, childCenter, 0.05)
+      : hasDoorOnWallRotated(room.tpl, room.rotate || 0, room.attachWall);
+    const parentMatches = parentCenter !== null
+      ? hasDoorAtOffset(parent.tpl, parent.rotate || 0, room.parentWall, parentCenter, 0.05)
+      : hasDoorOnWallRotated(parent.tpl, parent.rotate || 0, room.parentWall);
+
+    if (!childMatches) {
       const childLocalWall = worldWallToLocalWall(room.rotate || 0, room.attachWall);
-      const childWidth = childDoor?.width ?? 1.0;
-      const childCenter = childDoor
-        ? childDoor.offset + childWidth / 2
-        : computeCenterOffsetLocal(room.tpl, childLocalWall);
+      const desiredCenter = childCenter ?? computeCenterOffsetLocal(room.tpl, childLocalWall);
       addExtraDoor(extraDoors, room.slotId, {
         wall: childLocalWall,
-        offset: childCenter - childWidth / 2,
+        offset: desiredCenter - childWidth / 2,
         width: childWidth,
-        height: childDoor?.height ?? 2.1
+        height: room.attachDoor?.height ?? 2.1
       });
     }
 
-    if (!parentHasDoor) {
-      const parentDoor = room.parentDoor;
+    if (!parentMatches) {
       const parentLocalWall = worldWallToLocalWall(parent.rotate || 0, room.parentWall);
-      const parentWidth = parentDoor?.width ?? 1.0;
-      const parentCenter = parentDoor
-        ? parentDoor.offset + parentWidth / 2
-        : computeCenterOffsetLocal(parent.tpl, parentLocalWall);
+      const desiredCenter = parentCenter ?? computeCenterOffsetLocal(parent.tpl, parentLocalWall);
       addExtraDoor(extraDoors, parent.slotId, {
         wall: parentLocalWall,
-        offset: parentCenter - parentWidth / 2,
+        offset: desiredCenter - parentWidth / 2,
         width: parentWidth,
-        height: parentDoor?.height ?? 2.1
+        height: room.parentDoor?.height ?? 2.1
       });
     }
   }
+  return extraDoors;
+}
 
-  for (const room of variant.rooms) {
-    const pos = {
-      x: (room.pos.x || 0) * layoutScale,
-      z: (room.pos.z || 0) * layoutScale
-    };
-    const doors = extraDoors.get(room.slotId);
-    addRoomMeshes(scene, shadowGen, walls, room.tpl, pos, room.rotate || 0, room.slotId, debugBounds, doors);
+function mergeDoorLists(room, autoDoors) {
+  const merged = [];
+  const queue = [];
+  if (Array.isArray(autoDoors)) queue.push(...autoDoors);
+  if (Array.isArray(room.userDoors)) queue.push(...room.userDoors);
+
+  for (const door of queue) {
+    if (!door || !door.wall) continue;
+    const width = door.width ?? 1.2;
+    const offset = door.offset ?? 0;
+    if (hasLocalDoorAtOffset(room.tpl, door.wall, offset, width, 0.05)) continue;
+    if (hasDoorAtOffsetList(merged, door.wall, offset, width, 0.05)) continue;
+    merged.push({ ...door, width, offset });
   }
+  return merged;
+}
 
-  return { walls, ground };
+function hasLocalDoorAtOffset(tpl, wall, offset, width, tolerance) {
+  if (!tpl?.doors) return false;
+  return hasDoorAtOffsetList(tpl.doors, wall, offset, width, tolerance);
+}
+
+function hasDoorAtOffsetList(doors, wall, offset, width, tolerance) {
+  const target = offset + (width ?? 1.2) / 2;
+  for (const d of doors || []) {
+    if (d.wall !== wall) continue;
+    const w = d.width ?? 1.2;
+    const center = (d.offset ?? 0) + w / 2;
+    if (Math.abs(center - target) <= tolerance) return true;
+  }
+  return false;
 }
 
 async function loadJSON(path) {
@@ -134,7 +217,7 @@ function buildWallSegments(len, doors) {
   return segments;
 }
 
-// addRoomMeshes(scene, shadowGen, walls, tpl, pos, rotDeg, name, debugBounds)
+// addRoomMeshes(scene, shadowGen, walls, room, pos, rotateDeg, debugBounds, extraDoors)
 // scene       — Babylon.Scene
 // shadowGen   — ShadowGenerator, у який додаємо стіни-кастери
 // walls       — масив AABB для колізій (controls)
@@ -143,26 +226,35 @@ function buildWallSegments(len, doors) {
 // rotDeg      — обертання кімнати у градусах
 // name        — ідентифікатор/slotId для назв мешів
 // debugBounds — чи показувати жовтий wireframe куб кімнати
-function addRoomMeshes(scene, shadowGen, walls, tpl, pos, rotDeg, name, debugBounds, extraDoors) {
+function addRoomMeshes(scene, shadowGen, walls, room, pos, rotDeg, debugBounds, extraDoors) {
+  const tpl = room.tpl;
+  const name = room.slotId;
   const rot = BABYLON.Angle.FromDegrees(rotDeg).radians();
+  const roomRoot = new BABYLON.TransformNode(`${name}-root`, scene);
+  roomRoot.position = new BABYLON.Vector3(pos.x, 0, pos.z);
+  roomRoot.rotation.y = rot;
+  const meshes = [];
+  const wallMeshes = [];
+
   const floor = BABYLON.MeshBuilder.CreateBox(`${name}-floor`, { width: tpl.size.w, height: 0.1, depth: tpl.size.d }, scene);
-  floor.position = new BABYLON.Vector3(pos.x, 0, pos.z);
-  floor.rotation.y = rot;
+  floor.position = new BABYLON.Vector3(0, 0, 0);
+  floor.parent = roomRoot;
+  floor.checkCollisions = true;
+  floor.metadata = { isFloor: true, roomId: name };
   const fmat = new BABYLON.StandardMaterial(`${name}-floor-mat`, scene);
   fmat.diffuseColor = colorByType(tpl.type);
   fmat.specularColor = new BABYLON.Color3(0, 0, 0);
   floor.material = fmat;
   floor.receiveShadows = true;
+  meshes.push(floor);
 
   const wallT = 0.1;
-  const wallInset = wallT / 2;
-  const wallH = tpl.size.h;
-  const wallRoot = new BABYLON.TransformNode(`${name}-walls-root`, scene);
-  wallRoot.position = floor.position.clone();
-  wallRoot.rotation.y = rot;
-
+  const wallInset = 0;
+  const wallH = tpl.wallHeight ?? tpl.size.h;
+  const collisionWallH = tpl.collisionWallHeight ?? wallH;
+  const needsCollider = collisionWallH > wallH + 0.01;
   if (debugBounds) {
-    addDebugBounds(scene, wallRoot, tpl.size);
+    addDebugBounds(scene, roomRoot, tpl.size);
   }
 
   const wallsSpec = [
@@ -173,7 +265,7 @@ function addRoomMeshes(scene, shadowGen, walls, tpl, pos, rotDeg, name, debugBou
   ];
 
   for (const spec of wallsSpec) {
-    const doors = tpl.doors.filter(d => d.wall === spec.wall);
+    const doors = (tpl.doors || []).filter(d => d.wall === spec.wall);
     if (extraDoors) {
       extraDoors.filter(d => d.wall === spec.wall).forEach(d => doors.push(d));
     }
@@ -195,9 +287,10 @@ function addRoomMeshes(scene, shadowGen, walls, tpl, pos, rotDeg, name, debugBou
       }
       const wallMesh = BABYLON.MeshBuilder.CreateBox(`${name}-wall-${spec.wall}-${seg.start.toFixed(2)}`, { width: w, height: wallH, depth: d }, scene);
       wallMesh.position = new BABYLON.Vector3(px, wallH / 2, pz);
-      wallMesh.parent = wallRoot;
+      wallMesh.parent = roomRoot;
       wallMesh.material = fmat;
       wallMesh.receiveShadows = true;
+      wallMesh.metadata = { roomId: name, wall: spec.wall, len: spec.len, axis: spec.axis };
 
       const info = getWallInfo(wallMesh);
       const dup = findDuplicateWall(walls, info);
@@ -208,13 +301,29 @@ function addRoomMeshes(scene, shadowGen, walls, tpl, pos, rotDeg, name, debugBou
         wallMesh.doNotSyncBoundingInfo = true;
         wallMesh.isOccluded = true;
       } else {
+        wallMesh.isPickable = true;
         shadowGen.addShadowCaster(wallMesh);
         walls.push(info);
+      }
+      meshes.push(wallMesh);
+      if (wallMesh.isPickable) wallMeshes.push(wallMesh);
+
+      if (needsCollider) {
+        const coll = BABYLON.MeshBuilder.CreateBox(`${name}-coll-${spec.wall}-${seg.start.toFixed(2)}`, { width: w, height: collisionWallH, depth: d }, scene);
+        coll.position = new BABYLON.Vector3(px, collisionWallH / 2, pz);
+        coll.parent = roomRoot;
+        coll.isVisible = false;
+        coll.isPickable = false;
+        coll.receiveShadows = false;
+        coll.doNotSyncBoundingInfo = false;
+        coll.metadata = { roomId: name, isCollider: true };
+        walls.push(getWallInfo(coll));
       }
     }
   }
 
-  addLabel(scene, wallRoot, name || tpl.type, wallH);
+  addLabel(scene, roomRoot, name || tpl.type, wallH);
+  return { root: roomRoot, meshes, wallMeshes };
 }
 
 function getWallInfo(mesh) {
@@ -242,8 +351,9 @@ function overlaps(a, b) {
   const overlap = Math.min(a.max, b.max) - Math.max(a.min, b.min);
   const lenA = a.max - a.min;
   const lenB = b.max - b.min;
+  if (Math.abs(lenA - lenB) > 0.02) return false;
   const minLen = Math.min(lenA, lenB);
-  return overlap > 0.9 * minLen;
+  return overlap >= minLen - 0.02;
 }
 
 function findDuplicateWall(existing, candidate) {
@@ -351,6 +461,17 @@ function hasDoorOnWallRotated(tpl, rotateDeg, worldWall) {
   if (!tpl?.doors) return false;
   for (const d of tpl.doors) {
     if (mapWallByRotate(d.wall, rotateDeg) === worldWall) return true;
+  }
+  return false;
+}
+
+function hasDoorAtOffset(tpl, rotateDeg, worldWall, desiredCenter, tolerance) {
+  if (!tpl?.doors) return false;
+  for (const d of tpl.doors) {
+    if (mapWallByRotate(d.wall, rotateDeg) !== worldWall) continue;
+    const width = d.width ?? 1.0;
+    const center = (d.offset ?? 0) + width / 2;
+    if (Math.abs(center - desiredCenter) <= tolerance) return true;
   }
   return false;
 }

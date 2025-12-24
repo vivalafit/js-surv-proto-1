@@ -14,8 +14,8 @@
 
     { "slotId": "bath", "type": "bathroom", "pos": { "x": 4.0, "z": 4.0 }, "rotate": 0, "pick": ["bath_02_cozy"], "attachTo": "corr" },
 
-    { "slotId": "stor", "type": "storage", "pos": { "x": 4.0, "z": -4.0 }, "rotate": 0, "pick": ["storage_02_closet"], "optional": true, "attachTo": "corr" },
     { "slotId": "util", "type": "utility", "pos": { "x": 6.0, "z": -4.0 }, "rotate": 0, "pick": ["utility_01_panel"], "optional": true, "attachTo": "corr" },
+    { "slotId": "stor", "type": "storage", "pos": { "x": 4.0, "z": -4.0 }, "rotate": 0, "pick": ["storage_02_closet"], "optional": true, "attachTo": "corr" },
 
     { "slotId": "balc", "type": "balcony", "pos": { "x": 14.0, "z": 0.0 }, "rotate": 180, "pick": ["balcony_01"], "optional": true, "attachTo": "living" }
   ]

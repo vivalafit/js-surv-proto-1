@@ -66,11 +66,12 @@ export async function initScene(canvas, fpsEl) {
     if (fpsEl) fpsEl.textContent = `FPS: ${engine.getFps().toFixed(0)}`;
   });
   // debug bounds false/true
-  const { walls } = await buildLayout(scene, shadowGen, { debugBounds: false, patternPath: '/room-templates/patterns/apt_division_cozy_1br.json' });
-  // const { walls } = await buildLayout(scene, shadowGen, { debugBounds: true });
+  const layout = await buildLayout(scene, shadowGen, { debugBounds: false, patternPath: '/room-templates/patterns/apt_division_cozy_1br.json' });
+  // const layout = await buildLayout(scene, shadowGen, { debugBounds: true });
+  const { walls } = layout;
 
   engine.runRenderLoop(() => scene.render());
   window.addEventListener('resize', () => engine.resize());
 
-  return { engine, scene, camera, aggregates: new Map(), walkSpeed, flySpeed, walls };
+  return { engine, scene, camera, aggregates: new Map(), walkSpeed, flySpeed, walls, layout };
 }

@@ -101,6 +101,7 @@ app.get('/main.js', (res, req) => sendFile(res, path.join(clientDir, 'main.js'),
 app.get('/net.js', (res, req) => sendFile(res, path.join(clientDir, 'net.js'), 'application/javascript; charset=utf-8'))
 app.get('/scene.js', (res, req) => sendFile(res, path.join(clientDir, 'scene.js'), 'application/javascript; charset=utf-8'))
 app.get('/controls.js', (res, req) => sendFile(res, path.join(clientDir, 'controls.js'), 'application/javascript; charset=utf-8'))
+app.get('/editor.js', (res, req) => sendFile(res, path.join(clientDir, 'editor.js'), 'application/javascript; charset=utf-8'))
 app.get('/apartment-layout.js', (res, req) => sendFile(res, path.join(clientDir, 'apartment-layout.js'), 'application/javascript; charset=utf-8'))
 app.get('/apartment-generator.js', (res, req) => sendFile(res, path.join(clientDir, 'apartment-generator.js'), 'application/javascript; charset=utf-8'))
 app.get('/room-templates/*', (res, req) => {

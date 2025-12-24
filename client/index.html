@@ -2,11 +2,12 @@
 <meta charset="utf-8" />
 <title>js-shooter-prototype</title>
 <style>
-  body { margin: 0; font-family: system-ui, sans-serif; background:#0b0b0b; color:#eaeaea; }
-  .wrap { display: grid; grid-template-columns: 1fr 320px; height: 100vh; }
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+  body { font-family: system-ui, sans-serif; background:#0b0b0b; color:#eaeaea; }
+  .wrap { display: grid; grid-template-columns: 1fr; height: 100vh; }
   .stage { position: relative; background:#000; }
   canvas { width: 100%; height: 100%; display: block; }
-  .pane { border-left: 1px solid #222; display:flex; flex-direction:column; }
+  .pane { border-left: 1px solid #222; display:none; flex-direction:column; }
   .log { flex:1; padding:10px; background:#111; color:#97f59c; overflow:auto; font:12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
   form { display:flex; border-top:1px solid #222; }
   input { flex:1; padding:10px; background:#1a1a1a; color:#eaeaea; border:0; outline:none; }
@@ -16,16 +17,13 @@
   .log p { margin: 0 0 6px; }
   .overlay { position:absolute; top:10px; left:10px; color:#eaeaea; font-size:12px; background:rgba(0,0,0,0.35); padding:6px 8px; border-radius:6px; pointer-events:none; }
   .hud { position:absolute; top:10px; right:10px; color:#eaeaea; font:12px ui-monospace, SFMono-Regular, Menlo, monospace; background:rgba(0,0,0,0.35); padding:6px 8px; border-radius:6px; pointer-events:none; min-width:120px; text-align:right; }
+  .mode-toggle { position:absolute; top:44px; right:10px; padding:6px 10px; font-size:12px; border-radius:6px; background:rgba(0,0,0,0.45); color:#eaeaea; border:1px solid #2a2a2a; cursor:pointer; pointer-events:auto; }
 </style>
 <div class="wrap">
   <div class="stage">
     <canvas id="renderCanvas"></canvas>
-    <div class="overlay">
-      <div>Room: <span id="room" class="tag"></span></div>
-      <div>Клік для захоплення миші. WASD — рух, Space/Ctrl — вгору/вниз.</div>
-      <div>ЛКМ по кубу — штовхнути його.</div>
-    </div>
     <div class="hud"><span id="fps">FPS: --</span></div>
+    <button id="modeToggle" class="mode-toggle">Mode: Fly</button>
   </div>
   <div class="pane">
     <div class="log" id="log"></div>
